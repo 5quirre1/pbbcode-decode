@@ -78,7 +78,7 @@
             const src = this.sanitizeUrl(content);
             if (!src) return '';
             const escapedSrc = this.escapeHtml(src);
-            return `<img src="${escapedSrc}" alt="User Image">`;
+            return `<img src="${escapedSrc}" alt="image">`;
         }
         handleStyle(content, attribute) {
             if (attribute === 'bg') {
