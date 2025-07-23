@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f0f0f0;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-bottom: 10px;
+      font-family: monospace;
+    }
+    #output {
+      padding: 10px;
+      background: white;
+      border: 1px solid #ccc;
+      min-height: 100px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>test</h1>
+  <textarea id="theinpiut" placeholder="enter the bbode..">[b]ss[/b] [i]dddddd[/i] [url=https://pikidiary.lol]d[/url]</textarea>
+  <br>
+  <button onclick="swag()">run</button>
+  <h2>output:</h2>
+  <div id="output"></div>
+  <script src="./src/bbcode.js"></script>
+  <script>
+    function swag() {
+      const input = document.getElementById('theinpiut').value;
+      const formatted = formatContentWithBBCode(input);
+      document.getElementById('output').innerHTML = formatted;
+    }
+  </script>
+</body>
+</html>
