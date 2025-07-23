@@ -17,7 +17,7 @@
                 'br': { open: '<div class="br"></div>', close: '', selfClosing: true },
                 'url': { handler: this.handleUrl.bind(this), hasContent: true },
                 'img': { handler: this.handleImg.bind(this), hasContent: true },
-                'marquee': { open: '<marquee>', close: '</marquee>' },
+                'marquee': { open: '<marquee scrollamount="3">', close: '</marquee>' },
                 'style': { handler: this.handleStyle.bind(this), hasContent: true },
                 'music': { handler: this.handleMusic.bind(this), hasContent: true }
             };
