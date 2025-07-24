@@ -54,6 +54,9 @@
             }
             return '';
         }
+        proxyUrl(url) {
+            return this.proxyPrefix + encodeURIComponent(url);
+        }
         handleUrl(content, attribute) {
             const href = this.sanitizeUrl(attribute || content);
             if (!href) return content ? this.escapeHtml(content) : '';
@@ -77,7 +80,8 @@
         handleImg(content) {
             const src = this.sanitizeUrl(content);
             if (!src) return '';
-            const escapedSrc = this.escapeHtml(src);
+            const proxiedSrc = this.proxyUrl(src);
+            const escapedSrc = this.escapeHtml(proxiedSrc);
             return `<img src="${escapedSrc}" alt="image">`;
         }
         handleStyle(content, attribute) {
@@ -89,13 +93,15 @@
                     const escapedColor = this.escapeHtml(content);
                     return `<style>body { background-color: ${escapedColor} !important; }</style>`;
                 } else if (urlRegex.test(content)) {
-                    const escapedUrl = this.escapeHtml(content);
+                    const proxiedUrl = this.proxyUrl(content);
+                    const escapedUrl = this.escapeHtml(proxiedUrl);
                     return `<style>body { background-image: url('${escapedUrl}') !important; background-repeat: repeat !important; }</style>`;
                 }
             } else if (attribute === 'cursor') {
                 const urlRegex = /^https?:\/\/.+/;
                 if (urlRegex.test(content)) {
-                    const escapedUrl = this.escapeHtml(content);
+                    const proxiedUrl = this.proxyUrl(content);
+                    const escapedUrl = this.escapeHtml(proxiedUrl);
                     return `<style>body, * { cursor: url('${escapedUrl}'), auto !important; } a, a img { cursor: pointer !important; }</style>`;
                 }
             }
@@ -104,7 +110,8 @@
         handleMusic(content, attribute) {
             const src = this.sanitizeUrl(content);
             if (!src) return '';
-            const escapedSrc = this.escapeHtml(src);
+            const proxiedSrc = this.proxyUrl(src);
+            const escapedSrc = this.escapeHtml(proxiedSrc);
             let audioAttributes = 'controls';
 
             if (attribute) {
