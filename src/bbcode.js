@@ -1,12 +1,12 @@
 /*
  *                    kinda usefull for stuff ig
  */
-
 (function (global) {
     class BBCodeThing {
         constructor() {
             this.allowedProtocols = ['http:', 'https:', 'mailto:'];
             this.allowedTags = ['b', 'i', 'u', 's', 'small', 'br', 'img', 'a', 'marquee', 'audio'];
+            this.proxyPrefix = 'https://proxy.pikidiary.lol/?url=';
 
             this.bbcodeTags = {
                 'b': { open: '<b>', close: '</b>' },
@@ -45,7 +45,12 @@
         }
         sanitizeUrl(url) {
             if (!url) return '';
-            url = url.trim();
+            try {
+                const decoded = decodeURIComponent(url);
+                url = decoded.trim();
+            } catch (e) {
+                url = url.trim();
+            }
             try {
                 const urlObj = new URL(url);
                 if (this.allowedProtocols.includes(urlObj.protocol)) return url;
@@ -81,8 +86,8 @@
             const src = this.sanitizeUrl(content);
             if (!src) return '';
             const proxiedSrc = this.proxyUrl(src);
-            const escapedSrc = this.escapeHtml(proxiedSrc);
-            return `<img src="${escapedSrc}" alt="image">`;
+            const fallback = 'https://raw.githubusercontent.com/5quirre1/5quirre1/refs/heads/main/goodies/CDN/pikiimgerror.gif';
+            return `<img src="${proxiedSrc}" alt="image" onerror="this.onerror=null;this.src='${fallback}';">`;
         }
         handleStyle(content, attribute) {
             if (attribute === 'bg') {
@@ -94,15 +99,13 @@
                     return `<style>body { background-color: ${escapedColor} !important; }</style>`;
                 } else if (urlRegex.test(content)) {
                     const proxiedUrl = this.proxyUrl(content);
-                    const escapedUrl = this.escapeHtml(proxiedUrl);
-                    return `<style>body { background-image: url('${escapedUrl}') !important; background-repeat: repeat !important; }</style>`;
+                    return `<style>body { background-image: url('${proxiedUrl}') !important; background-repeat: repeat !important; }</style>`;
                 }
             } else if (attribute === 'cursor') {
                 const urlRegex = /^https?:\/\/.+/;
                 if (urlRegex.test(content)) {
                     const proxiedUrl = this.proxyUrl(content);
-                    const escapedUrl = this.escapeHtml(proxiedUrl);
-                    return `<style>body, * { cursor: url('${escapedUrl}'), auto !important; } a, a img { cursor: pointer !important; }</style>`;
+                    return `<style>body, * { cursor: url('${proxiedUrl}'), auto !important; } a, a img { cursor: pointer !important; }</style>`;
                 }
             }
             return '';
@@ -111,7 +114,6 @@
             const src = this.sanitizeUrl(content);
             if (!src) return '';
             const proxiedSrc = this.proxyUrl(src);
-            const escapedSrc = this.escapeHtml(proxiedSrc);
             let audioAttributes = 'controls';
 
             if (attribute) {
@@ -120,7 +122,7 @@
                 if (params.includes('loop')) audioAttributes += ' loop';
             }
 
-            return `<audio ${audioAttributes} style="width: 100%; margin: 5px 0;"><source src="${escapedSrc}" type="audio/mpeg">Your browser does not support the audio element.</audio>`;
+            return `<audio ${audioAttributes} style="width: 100%; margin: 5px 0;"><source src="${proxiedSrc}" type="audio/mpeg">Your browser does not support the audio element.</audio>`;
         }
         parseAttributes(tagContent) {
             const equalIndex = tagContent.indexOf('=');
